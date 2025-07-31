@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第2回 AI実践ワークショップ - ロードマップセミナー</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #fff3e0 50%, #fce4ec 100%);
+            color: #333;
+            overflow: hidden;
+            height: 100vh;
+            animation: backgroundShift 30s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0% { background: linear-gradient(135deg, #e3f2fd 0%, #fff3e0 50%, #fce4ec 100%); }
+            50% { background: linear-gradient(135deg, #fff3e0 0%, #fce4ec 50%, #e8f5e8 100%); }
+            100% { background: linear-gradient(135deg, #e3f2fd 0%, #fff3e0 50%, #fce4ec 100%); }
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .slide {
+            position: absolute;
+            top: 40px;
+            left: 80px;
+            right: 80px;
+            bottom: 120px;
+            width: calc(100% - 160px);
+            height: calc(100vh - 160px);
+            padding: 60px 80px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.6s ease-in-out;
+            border: 2px solid rgba(255,255,255,0.5);
+            overflow-y: auto;
+        }
+
+        .slide h1, .slide h2 {
+            text-align: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            line-height: 1.2;
+        }
+
+        .slide h2 {
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .slide h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #e74c3c;
+        }
+
+        .step-box h3 {
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+
+        .step-box p {
+            font-size: 1.2em;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+        .step-box ol, .step-box ul {
+            font-size: 1.2em;
+            line-height: 1.7;
+        }
+
+        .step-box ol li, .step-box ul li {
+            margin-bottom: 12px;
+            padding-left: 5px;
+        }
+
+        .slide h4 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .slide p, .slide li {
+            font-size: 1.3em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            max-width: 900px;
+        }
+
+        .slide ul, .slide ol {
+            text-align: left;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .slide li {
+            margin-bottom: 12px;
+            padding-left: 10px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(255,126,95,0.3);
+            max-width: 900px;
+        }
+
+        .code-box {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            text-align: left;
+            margin: 20px 0;
+            white-space: pre-line;
+            overflow-x: auto;
+            max-width: 900px;
+            font-size: 1.1em;
+        }
+
+        .step-box {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            padding: 30px 35px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #3498db;
+            max-width: 950px;
+            width: 100%;
+            box-sizing: border-box;
+            line-height: 1.8;
+        }
+
+        .timer-box {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            padding: 25px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin: 20px 0;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .timer-box .step-box {
+            max-width: 100%;
+            margin: 15px 5px;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(52, 152, 219, 0.9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 0 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .nav-btn:hover {
+            background: rgba(41, 128, 185, 0.95);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(52, 152, 219, 0.4);
+        }
+
+        .nav-btn:disabled {
+            background: rgba(189, 195, 199, 0.7);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 4px 15px rgba(189, 195, 199, 0.2);
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            color: #2c3e50;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            z-index: 1000;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .emoji {
+            font-size: 1.3em;
+            margin-right: 10px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+            margin: 20px 0;
+        }
+
+        .workshop-phase {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px 0;
+            font-weight: bold;
+            max-width: 900px;
+        }
+
+        .success-box {
+            background: #27ae60;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px;
+        }
+
+        .error-box {
+            background: #e74c3c;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                bottom: 80px;
+                width: calc(100% - 40px);
+                height: calc(100vh - 100px);
+                padding: 30px 20px;
+            }
+
+            .step-box {
+                padding: 25px 20px;
+                margin: 15px 0;
+                max-width: 100%;
+            }
+
+            .step-box h3 {
+                font-size: 1.4em;
+            }
+
+            .step-box p, .step-box ol, .step-box ul {
+                font-size: 1.1em;
+            }
+
+            .timer-box {
+                padding: 20px 15px;
+            }
+            
+            .slide h1 {
+                font-size: 1.8em;
+            }
+            
+            .slide h2 {
+                font-size: 1.5em;
+            }
+            
+            .slide p, .slide li {
+                font-size: 1.1em;
+            }
+            
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-btn {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+
+            .slide-counter {
+                top: 10px;
+                right: 10px;
+                padding: 8px 16px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slideshow-container">
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">19</span>
+        </div>
+
+        <!-- スライド1: タイトル -->
+        <div class="slide active">
+            <h1><span class="emoji">🤖</span>AIコンテンツラボ</h1>
+            <h1>ロードマップセミナー第2回</h1>
+            <div class="highlight-box">
+                <h2>AI活用実践ワークショップ</h2>
+                <h3>〜15分で記事を書く方法〜</h3>
+            </div>
+            <p><strong>2025年7月31日（木）21:00-22:00</strong></p>
+            <p>実践メイン・作業会形式</p>
+        </div>
+
+        <!-- スライド2: 本日のゴール -->
+        <div class="slide">
+            <h2><span class="emoji">🎯</span>本日のゴール</h2>
+            <ul>
+                <li><span class="emoji">✅</span>ChatGPT・Claudeを実際に使いこなす</li>
+                <li><span class="emoji">✅</span>15分で記事下書きを完成させる</li>
+                <li><span class="emoji">✅</span>効率化フローを身につける</li>
+                <li><span class="emoji">✅</span>最初の記事を実際に作成</li>
+                <li><span class="emoji">✅</span>明日からすぐ使えるテクニックを習得</li>
+            </ul>
+            <div class="highlight-box">
+                <p><strong>今日は手を動かして覚える日！</strong></p>
+            </div>
+        </div>
+
+        <!-- スライド3: 本日の流れ -->
+        <div class="slide">
+            <h2><span class="emoji">📋</span>タイムスケジュール（60分）</h2>
+            <div class="step-box">
+                <p><strong>25分：AI実践講座</strong></p>
+                <p>ChatGPT・Claude・Gemini実演、効率化テクニック</p>
+            </div>
+            <div class="step-box">
+                <p><strong>35分：作業会（記事作成実践）</strong></p>
+                <p>その場でAIを使って記事下書き作成</p>
+            </div>
+            <div class="highlight-box">
+                <p><strong>実践8割、理論2割で進めます</strong></p>
+            </div>
+        </div>
+
+        <!-- スライド4: 今日覚えるAIツール -->
+        <div class="slide">
+            <h2><span class="emoji">🤖</span>必修AIツール</h2>
+            <div class="step-box">
+                <h3>1. ChatGPT / Claude / Gemini</h3>
+                <p>アイデア出し・文章生成・分析など</p>
+            </div>
+            <div class="step-box">
+                <h3>2. サムネイル作成ツール</h3>
+                <p>Canva AI・Adobe Express・Figmaなど</p>
+            </div>
+            <div class="highlight-box">
+                <p><strong>この2つで記事作成が劇的に効率化</strong></p>
+            </div>
+        </div>
+
+        <!-- スライド5: 15分記事作成フロー -->
+        <div class="slide">
+            <h2><span class="emoji">⏰</span>15分記事作成フロー</h2>
+            <div class="grid-2" style="gap: 40px; margin-top: 40px;">
+                <div class="step-box">
+                    <h3>【準備】1分</h3>
+                    <p>・テーマ決定</p>
+                    <p>・ターゲット読者設定</p>
+                </div>
+                <div class="step-box">
+                    <h3>【構成作成】3分</h3>
+                    <p>・AIで骨組み作成</p>
+                    <p>・章立て決定</p>
+                </div>
+            </div>
+            <div class="grid-2" style="gap: 40px; margin-top: 30px;">
+                <div class="step-box">
+                    <h3>【本文作成】10分</h3>
+                    <p>・各章をAIでサポート</p>
+                    <p>・具体例追加</p>
+                </div>
+                <div class="step-box">
+                    <h3>【仕上げ】1分</h3>
+                    <p>・タイトル最適化</p>
+                    <p>・最終チェック</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド6: ChatGPT実演1 -->
+        <div class="slide">
+            <h2><span class="emoji">🎬</span>実演：3分で記事構成を作る</h2>
+            <div class="code-box">以下の条件で記事の構成を作成してください：
+
+テーマ：「○○○○」
+読者：初心者
+目的：実践的なノウハウ提供
+文字数：1500字程度
+構成：導入→3つのポイント→まとめ
+
+各章のポイントも簡潔に教えてください。</div>
+            <div class="highlight-box">
+                <p><strong>実際にやってみます！</strong></p>
+            </div>
+        </div>
+
+        <!-- スライド7: ChatGPT実演2 -->
+        <div class="slide">
+            <h2><span class="emoji">🎬</span>実演：導入文を魅力的に書く</h2>
+            <div class="code-box">以下のテーマで、読者が最後まで読みたくなる
+魅力的な導入文を300字程度で作成してください：
+
+テーマ：「○○○○」
+読者の悩み：○○で困っている
+提供価値：○○が解決できる
+口調：親しみやすく、わかりやすく</div>
+            <div class="highlight-box">
+                <p><strong>どんな文章が生成されるか見てみましょう</strong></p>
+            </div>
+        </div>
+
+        <!-- スライド8: Claude実演 -->
+        <div class="slide">
+            <h2><span class="emoji">🎬</span>実演：文章を読みやすく改善</h2>
+            <div class="code-box">以下の文章をより読みやすく、
+魅力的に改善してください：
+
+【元の文章】
+（実際の文章を入力）
+
+改善ポイント：
+- 分かりやすい表現に
+- 具体例を追加
+- 読者の気持ちに寄り添う表現に</div>
+            <div class="highlight-box">
+                <p><strong>Before/Afterを比較してみます</strong></p>
+            </div>
+        </div>
+
+        <!-- スライド9: 効率化テクニック -->
+        <div class="slide">
+            <h2><span class="emoji">⚡</span>効率化テクニック5選</h2>
+            <ul>
+                <li><strong>1. テンプレート化</strong><br>よく使うプロンプトを保存</li>
+                <li><strong>2. 段階的改善</strong><br>一度で完璧を求めない</li>
+                <li><strong>3. 複数案生成</strong><br>3-5案から選ぶ</li>
+                <li><strong>4. 他の文章と組み合わせ</strong><br>既存記事をベースに改良</li>
+                <li><strong>5. 感情を込める</strong><br>「親しみやすく」「情熱的に」等の指示</li>
+            </ul>
+        </div>
+
+        <!-- スライド10: プロンプトのコツ -->
+        <div class="slide">
+            <h2><span class="emoji">💡</span>良いプロンプトの作り方</h2>
+            <div class="step-box">
+                <h3>基本構造</h3>
+                <ol>
+                    <li><strong>役割設定：</strong>「あなたは○○の専門家です」</li>
+                    <li><strong>具体的指示：</strong>「○○について○○字で書いて」</li>
+                    <li><strong>条件指定：</strong>「初心者向けに」「具体例を入れて」</li>
+                    <li><strong>出力形式：</strong>「箇条書きで」「見出し付きで」</li>
+                </ol>
+            </div>
+            <div class="grid-2">
+                <div class="error-box">
+                    <h4>❌ NG例</h4>
+                    <p>「記事を書いて」</p>
+                </div>
+                <div class="success-box">
+                    <h4>⭕ OK例</h4>
+                    <p>「副業初心者向けに、ChatGPTで月1万円稼ぐ方法を1500字で、具体例3つ含めて書いて」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド11: よくある失敗と対策 -->
+        <div class="slide">
+            <h2><span class="emoji">⚠️</span>よくある失敗パターン</h2>
+            <div class="grid-2">
+                <div class="step-box">
+                    <h4>失敗1：プロンプトが曖昧</h4>
+                    <p><strong>対策：</strong>5W1Hを明確に</p>
+                </div>
+                <div class="step-box">
+                    <h4>失敗2：一度で完璧を求める</h4>
+                    <p><strong>対策：</strong>段階的に改善</p>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="step-box">
+                    <h4>失敗3：AIの出力をそのまま使う</h4>
+                    <p><strong>対策：</strong>必ず自分の体験を追加</p>
+                </div>
+                <div class="step-box">
+                    <h4>失敗4：同じプロンプトばかり使う</h4>
+                    <p><strong>対策：</strong>バリエーションを増やす</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド12: 効率化フロー -->
+        <div class="slide">
+            <h2><span class="emoji">🚀</span>今日構築する効率化フロー</h2>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin: 40px 0; flex-wrap: wrap;">
+                <div class="workshop-phase" style="width: 170px; margin: 10px 5px; position: relative;">
+                    <p><strong>STEP 1</strong></p>
+                    <p>テーマ選定</p>
+                    <p><small>（AI相談）</small></p>
+                </div>
+                <div style="font-size: 2em; color: #3498db; margin: 0 10px;">→</div>
+                <div class="workshop-phase" style="width: 170px; margin: 10px 5px; position: relative;">
+                    <p><strong>STEP 2</strong></p>
+                    <p>構成作成</p>
+                    <p><small>（AI生成）</small></p>
+                </div>
+                <div style="font-size: 2em; color: #3498db; margin: 0 10px;">→</div>
+                <div class="workshop-phase" style="width: 170px; margin: 10px 5px; position: relative;">
+                    <p><strong>STEP 3</strong></p>
+                    <p>各章執筆</p>
+                    <p><small>（AI支援）</small></p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center; margin: 30px 0;">
+                <div style="font-size: 2em; color: #3498db; margin: 0 10px;">↓</div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-around; margin: 40px 0;">
+                <div class="workshop-phase" style="width: 200px; margin: 10px;">
+                    <p><strong>STEP 4</strong></p>
+                    <p>文章改善</p>
+                    <p><small>（AI校正）</small></p>
+                </div>
+                <div style="font-size: 2em; color: #3498db; margin: 0 20px;">→</div>
+                <div class="workshop-phase" style="width: 200px; margin: 10px;">
+                    <p><strong>STEP 5</strong></p>
+                    <p>タイトル最適化</p>
+                    <p><small>（AI提案）</small></p>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 40px;">
+                <p><strong>この流れを今から実際に体験します！</strong></p>
+            </div>
+        </div>
+
+        <!-- スライド13: 作業会スタート -->
+        <div class="slide">
+            <h2><span class="emoji">👥</span>実践作業会開始！</h2>
+            <div class="highlight-box">
+                <h3>今から30分で作ること</h3>
+                <ul style="text-align: left;">
+                    <li>✅ 記事のテーマ決定</li>
+                    <li>✅ 構成完成</li>
+                    <li>✅ 本文下書き完成</li>
+                    <li>✅ タイトル決定</li>
+                    <li>✅ 公開準備完了</li>
+                </ul>
+            </div>
+            <div class="step-box">
+                <h3>サポート体制</h3>
+                <ul style="text-align: left;">
+                    <li>困ったらいつでも質問OK</li>
+                    <li>画面共有で個別指導</li>
+                    <li>参加者同士の相談も推奨</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- スライド14: 作業手順 -->
+        <div class="slide">
+            <h2><span class="emoji">📝</span>作業手順（30分）</h2>
+            <div class="grid-2" style="gap: 30px; max-width: 100%; width: 100%;">
+                <div class="step-box" style="max-width: 100%;">
+                    <h3>最初の5分</h3>
+                    <p><strong>1. テーマ決定</strong><br>
+                    （AIに相談してもOK）</p>
+                    <p><strong>2. ターゲット読者の設定</strong></p>
+                </div>
+                <div class="step-box" style="max-width: 100%;">
+                    <h3>次の10分</h3>
+                    <p><strong>3. AIで構成作成</strong></p>
+                    <p><strong>4. 各章のポイント整理</strong></p>
+                </div>
+            </div>
+            <div class="grid-2" style="gap: 30px; max-width: 100%; width: 100%; margin-top: 20px;">
+                <div class="step-box" style="max-width: 100%;">
+                    <h3>次の12分</h3>
+                    <p><strong>5. 導入文作成</strong></p>
+                    <p><strong>6. 各章の本文執筆</strong><br>
+                    （AI活用）</p>
+                </div>
+                <div class="step-box" style="max-width: 100%;">
+                    <h3>最後の3分</h3>
+                    <p><strong>7. タイトル決定</strong></p>
+                    <p><strong>8. 全体の最終確認</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド15: テーマ選びのヒント -->
+        <div class="slide">
+            <h2><span class="emoji">💡</span>記事テーマの選び方</h2>
+            <div class="grid-2">
+                <div class="step-box">
+                    <h3>自分の経験から</h3>
+                    <ul style="text-align: left;">
+                        <li>仕事で学んだこと</li>
+                        <li>趣味の知識</li>
+                        <li>解決した悩み</li>
+                    </ul>
+                </div>
+                <div class="step-box">
+                    <h3>トレンドから</h3>
+                    <ul style="text-align: left;">
+                        <li>話題のツール</li>
+                        <li>季節のネタ</li>
+                        <li>よくある質問</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <h3>組み合わせ例</h3>
+                <p>「AI × 自分の専門分野」<br>
+                「ChatGPT × 日常の課題」</p>
+                <p><strong>まずは書きやすいものから！</strong></p>
+            </div>
+        </div>
+
+        <!-- スライド16: 困った時の対処法 -->
+        <div class="slide">
+            <h2><span class="emoji">🆘</span>困った時の対処法</h2>
+            <div class="grid-2">
+                <div class="step-box">
+                    <h4>プロンプトが思い浮かばない</h4>
+                    <p>→ テンプレート集を参考に</p>
+                </div>
+                <div class="step-box">
+                    <h4>文章が上手く書けない</h4>
+                    <p>→ 箇条書きから始めてAIで文章化</p>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="step-box">
+                    <h4>テーマが決まらない</h4>
+                    <p>→ 簡単な日常の工夫から</p>
+                </div>
+                <div class="step-box">
+                    <h4>時間が足りない</h4>
+                    <p>→ 完璧を求めず、下書きでOK</p>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <p><strong>いつでも声をかけてください！</strong></p>
+            </div>
+        </div>
+
+        <!-- スライド17: 成果発表 -->
+        <div class="slide">
+            <h2><span class="emoji">🎉</span>30分の成果を発表しましょう！</h2>
+            <div class="step-box">
+                <h3>発表内容（1人1分）</h3>
+                <ol style="text-align: left;">
+                    <li>選んだテーマとその理由</li>
+                    <li>作成できた内容（タイトル・構成など）</li>
+                    <li>AIツールで驚いたこと</li>
+                    <li>次回までにやりたいこと</li>
+                </ol>
+            </div>
+            <div class="highlight-box">
+                <p><strong>30分でもこんなに進歩！</strong></p>
+            </div>
+        </div>
+
+        <!-- スライド18: 今日の学び -->
+        <div class="slide">
+            <h2><span class="emoji">💡</span>今日の重要ポイント</h2>
+            <ul>
+                <li><span class="emoji">✅</span>AIは最強の執筆パートナー</li>
+                <li><span class="emoji">✅</span>プロンプト次第で品質が変わる</li>
+                <li><span class="emoji">✅</span>完璧を求めず、段階的改善</li>
+                <li><span class="emoji">✅</span>実際に手を動かすことの重要性</li>
+                <li><span class="emoji">✅</span>効率化フローの威力</li>
+            </ul>
+            <div class="highlight-box">
+                <p><strong>明日からすぐ実践できる状態に！</strong></p>
+            </div>
+        </div>
+
+        <!-- スライド19: 次回までの課題 -->
+        <div class="slide">
+            <h2><span class="emoji">📋</span>次回（8/10）までの宿題</h2>
+            <div class="step-box">
+                <h3>必須課題</h3>
+                <ul style="text-align: left;">
+                    <li>✅ 今日作成した記事を完成させる</li>
+                    <li>✅ noteまたはブログに公開</li>
+                    <li>✅ 作成した効率化フローで2本目に挑戦</li>
+                </ul>
+            </div>
+            <div class="step-box">
+                <h3>チャレンジ課題</h3>
+                <ul style="text-align: left;">
+                    <li>🚀 有料note（100円〜）の作成</li>
+                    <li>🚀 SNSでの宣伝投稿</li>
+                </ul>
+            </div>
+            <div class="highlight-box">
+                <h3>次回テーマ予告「初収益チャレンジ」</h3>
+                <p>収益化の基本戦略・価格設定・マーケティング実践</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← 前へ</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">次へ →</button>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        // 初期化
+        document.getElementById('totalSlides').textContent = totalSlides;
+        
+        function showSlide(index) {
+            // 全てのスライドを非表示に
+            slides.forEach((slide, i) => {
+                if (i === index) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+            
+            // スライド番号を更新
+            document.getElementById('currentSlide').textContent = index + 1;
+            
+            // ナビゲーションボタンの状態更新
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            const newIndex = currentSlideIndex + direction;
+            
+            if (newIndex >= 0 && newIndex < totalSlides) {
+                currentSlideIndex = newIndex;
+                showSlide(currentSlideIndex);
+            }
+        }
+
+        // キーボードナビゲーション
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                changeSlide(1);
+            }
+        });
+
+        // 初期表示
+        showSlide(0);
+    </script>
+</body>
+</html>
